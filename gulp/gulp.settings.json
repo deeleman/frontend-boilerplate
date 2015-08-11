@@ -1,0 +1,21 @@
+{
+    "js": {
+        "src": "./src/scss/**/*.js",
+        "dest": {
+            "path": "public/assets/js",
+            "filename": "app.js"
+        }
+    },
+    "sass": {
+        "src": "./src/scss/**/*.scss",
+        "dest": "./public/assets/css",
+        "options": {
+            "outputStyle": "compressed",
+            "sourceComments": false
+        }
+    },
+    "server": {
+        "port": 3000,
+        "wwwroot": "public"
+    }
+}

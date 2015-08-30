@@ -1,6 +1,6 @@
 {
     "js": {
-        "src": "./src/scss/**/*.js",
+        "src": "./src/js/**/*.js",
         "dest": {
             "path": "public/assets/js",
             "filename": "app.js"

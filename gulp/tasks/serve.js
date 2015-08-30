@@ -1,14 +1,14 @@
 'use strict';
 
-module.exports = function (gulpContainer, settings) {
-    var gulp = gulpContainer.gulp;
+module.exports = function (payload) {
+    var gulp = payload.gulpContainer.gulp;
     var serve = require('gulp-serve');
-    var config = settings.server;
+    var config = payload.settings.server;
 
     gulp.task('serve', serve({
         root: config.wwwroot,
         port: config.port
     }));
 
-    gulpContainer.getContainer('dev').addTask('serve');
+    payload.gulpContainer.getContainer('dev').addTask('serve');
 };

@@ -1,20 +1,19 @@
 'use strict';
 
-module.exports = function (gulpContainer, settings, errorHandler) {
-    var gulp = gulpContainer.gulp;
+module.exports = function (payload) {
+    var gulp = payload.gulpContainer.gulp;
     var sass = require('gulp-sass');
     var autoprefixer = require('gulp-autoprefixer');
     var sourcemaps = require('gulp-sourcemaps');
     var rename = require('gulp-rename');
     var watch = require('gulp-watch');
-    var livereload = require('gulp-livereload');
-    var config = settings.sass;
+    var config = payload.settings.sass;
 
     gulp.task('sass:app', function () {
         gulp.src(config.src)
             .pipe(sourcemaps.init())
             .pipe(sass(config.options))
-            .on('error', errorHandler)
+            .on('error', payload.errorHandler)
             .pipe(autoprefixer({
                 cascade: false
             }))
@@ -24,11 +23,10 @@ module.exports = function (gulpContainer, settings, errorHandler) {
             .pipe(rename({ extname: '.min.css' }))
             .pipe(sourcemaps.write())
             .pipe(gulp.dest(config.dest))
-            .pipe(livereload());
+            .pipe(payload.livereload());
     });
 
     gulp.task('sass:watch', ['sass:app'], function () {
-        livereload.listen();
         watch(config.src, { ignoreInitial: false, verbose: true }, function() {
             gulp.start('sass:app');
         });
@@ -36,5 +34,5 @@ module.exports = function (gulpContainer, settings, errorHandler) {
 
     gulp.task('sass', ['sass:watch']);
 
-    gulpContainer.getContainer('dev').addTask('sass');
+    payload.gulpContainer.getContainer('dev').addTask('sass');
 };

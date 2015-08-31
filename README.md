@@ -104,6 +104,13 @@ module.exports = function (payload) {
 };
 ```
 
+The `payload` parameter is basically a hash object acting as a wrapper for the following objects:
+
+* `gulpContainer`: The Gulp container itself, with utility methods and direct access to `gulp`itself.
+* `settings`: A JSONified shallow copy of the settings available at `/gulp/gulp.settings.json`.
+* `errorHandler`: An utility error handler wrapper based on `gulp-notify`. Youc an check its implementation at `/gulp/utils/errorHandler.js´.
+* `livereload`: Reference to the livereload server spawned, so we can access its API within each task without duplicating instances or triggering port conflicts.
+
 There will be case scenarios where you will be wanting to access Gulp directly bypassing the container manager. No worries... This Gulp implementation have your back! Remember that the `gulp`object is always available as part of the container and any task created within the project is available throughout the application regardless what container groups it belongs to.
 
 Let's figure out for argument's sake that you want to leverage plugins such as `gulp-sequence` (a *German Javascript newbie* asked me this question once) to sort the order where each standalone task is executed. Then you can proceed like this:

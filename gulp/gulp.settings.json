@@ -14,6 +14,11 @@
             "sourceComments": false
         }
     },
+    "html": {
+        "src": "./src/html/**/*.html",
+        "dest": "./public",
+        "wrappingTemplate": "./src/html/template.htm"
+    },
     "server": {
         "port": 3000,
         "wwwroot": "public"

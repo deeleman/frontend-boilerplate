@@ -32,7 +32,9 @@ What has just happened? After installing all third-party dependencies, the `gulp
 
 ### Where to store your files
 
-This template takes separation of concerns quite seriously, so development and build files live in different workspaces in order to prevent errors and ease the development effort. Here you have a rundown of the different locations you have:
+This template takes separation of concerns quite seriously, so development and build files live in different workspaces in order to prevent errors and ease the development effort.
+
+**Please note:** Nothing is set in stone in this boilerplate. If you ever want to modify both the source and destination directories, just do so by tweaking the values set at he global Gulp configuration file available at `/gulp/gulp.settings.json`.
 
 #### Source Javascript files
 Please store all your Javascript files belonging to your project at `src/js`. Anything available there will be later on digested into a single application file and saved onto `public/assets/js` (the HTML shell already points out to the destination location) by tracking down all dependencies found from `src/js/index.js`and beyond. **Never save Javascript files in the the `public` root path**. The building configuration will do that for you and it is not a good practice to mix up build files with actual dev files. Same applies to third-party dependencies.
@@ -40,14 +42,46 @@ Please store all your Javascript files belonging to your project at `src/js`. An
 #### SCSS files
 Please store your SASS files at `src/scss`. Gulp will watch such directory and will compile and export your SASS files into a single CSS file available for your page at `public/assets/css`. Same as we do for Javascript, you don't want to save under any circumstances any SASS/CSS file in any location other than `src/scss`.
 
+#### HTML Files
+Please save and edit all your HTML files from `src/html`. Gulp will watch such directory and replicate *as is* the files and folders structure at `/src/html` onto `/public`, after applying some code compression magic in order to reduce the bandwidth required. You can tweak the source and destination paths set at `/gulp/gulp.settings.json`, but you can also define a global template for all HTML files found therein by means of the `wrappingTemplate` property (otherwise leave it empty or just remove it). This is specially convenient when you are not building SPA thick clients and want each file to contain a full blown up HTML declaration but do not want to replicate the same HTML `<head>` or `<footer>` elements (or anything else) across all HTML files, using a centralized template for all. This way you can afford to create partial HTML files only and have Gulp injecting each one of those partial chunks of HTML into the final HTML build files.
+
+When defining a global template file, you will be wanting to include a placeholder tag to let Gulp know where to inject the partial code from each HTML file. Something like this will do the trick:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend Boilerplate</title>
+    <link rel="stylesheet" media="all" href="/assets/css/main.min.css">
+    <script defer src="/assets/js/app.min.js"></script>
+</head>
+
+<body>
+    <%= contents %>
+</body>
+
+</html>
+```
+
+If no `wrappingTemplate` property value is found, the boilerplate engine will assume you will be wanting to sue the HTML templates *as is*, with no changes whatsoever. Otherwise, it is strongly advised to use the `.htm` (or any other) file extension rather than `.html` in order to avoid messing up build and HTML template in the destination folder.
+
 #### Gulp tasks
 Please store your Gulp tasks as standalone module files into `gulp/tasks`. A complete [IoC](https://en.wikipedia.org/wiki/Inversion_of_control) setup has been put in place to ensure that each one of those standalone tasks files are available throughout the application and across different modules and files. You can also create composite tasks wrapping several other tasks by means of "Gulp containers". Doing so prevents you from having to track down tasks shared across different files later on, easing project maintenance down the line. In order to do so, just use the following template for your task:
 
 ```javascript
 'use strict';
 
-module.exports = function (gulpContainer, settings, errorHandler) {
-    var gulp = gulpContainer.gulp;
+module.exports = function (payload) {
+    var gulpContainer, gulp, settings, errorHandler, livereload;
+
+    gulpContainer = payload.gulpContainer;
+    gulp = payload.gulpContainer.gulp;
+    settings = payload.settings;
+    errorHandler = payload.errorHandler;
+    livereload = payload.livereload;
+
     // Your task dependencies and variables would go below this line
     // ...
 
@@ -72,11 +106,17 @@ module.exports = function (gulpContainer, settings, errorHandler) {
 
 There will be case scenarios where you will be wanting to access Gulp directly bypassing the container manager. No worries... This Gulp implementation have your back! Remember that the `gulp`object is always available as part of the container and any task created within the project is available throughout the application regardless what container groups it belongs to.
 
-Let's figure out for argument's sake that you want to leverage plugins such as `gulp-sequence` (a *Javascript newbie* asked me this question once) to sort the order where each standalone task is executed. Then you can proceed like this:
+Let's figure out for argument's sake that you want to leverage plugins such as `gulp-sequence` (a *German Javascript newbie* asked me this question once) to sort the order where each standalone task is executed. Then you can proceed like this:
 
 ```javascript
-module.exports = function (gulpContainer, settings, errorHandler) {
-    var gulp = gulpContainer.gulp;
+module.exports = function (payload) {
+
+    var gulpContainer, gulp, settings, /* ... */;
+    gulpContainer = payload.gulpContainer;
+    gulp = payload.gulpContainer.gulp;
+    settings = payload.settings;
+    // ... More dependencies declared from the payload
+
     var gulpSequence = require('gulp-sequence');
 
     // You might define certain tasks

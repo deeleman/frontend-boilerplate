@@ -35,5 +35,4 @@ Desktop.ini
 $RECYCLE.BIN/
 
 ## Build
-public/assets/css
-public/assets/js
+public

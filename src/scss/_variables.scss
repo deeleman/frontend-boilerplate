@@ -1,0 +1,61 @@
+// RWD breakpoints
+$break-small: 380px;
+$break-large: 1024px;
+
+// UI
+$em-base: 14px;
+
+// Font types
+$font-family: Arial, Helvetica, Sans-Serif;
+
+// Stacking levels
+$levels: (
+    base: 0,
+    dropdown: 1000,
+    overlay: 2000,
+    modal: 3000
+);
+
+@function level($level: 'base') {
+    @return map-get($levels, $level);
+}
+
+// Color palette
+$colors: (
+    white: (
+        base: #FFF,
+        dark: #F9FFEF,
+        darker: #FFF1A8,
+        transparent: rgba(255, 255, 255, 0)
+    ),
+    black: (
+        base: #000,
+        opacity20: rgba(0, 0, 0, 0.20)
+    ),
+    green: (
+        lightest: #F9FFEF,
+        light: #42D692,
+        base: #3DBFD9,
+        dark: #248AAF
+    ),
+    red: (
+        lighter: #FF7537,
+        light: #D14836,
+        base: red,
+        dark: #900
+    ),
+    grey: (
+        lightest: #F3F3F3,
+        lighter: #DDD,
+        light: #DEDEDE,
+        base: #CCC,
+        dark: #ADADAD,
+        darker: #666,
+        darkest: #333,
+        transparent: rgba(153, 153, 153, 0)
+    )
+);
+
+@function color($color, $tone: 'base') {
+    @return map-get(map-get($colors, $color), $tone);
+}

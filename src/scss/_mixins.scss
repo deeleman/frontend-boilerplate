@@ -1,0 +1,30 @@
+@import "variables";
+
+@mixin crop-multiline($font-size, $line-height, $lines-to-show) {
+    display: block;
+    display: -webkit-box;
+    overflow: hidden;
+    height: $font-size*$line-height*$lines-to-show;
+    text-overflow: ellipsis;
+    font-size: $font-size;
+    line-height: $line-height;
+
+    -webkit-line-clamp: $lines-to-show;
+    -webkit-box-orient: vertical;
+}
+
+@mixin respond-to($media) {
+  @if $media == handhelds {
+    @media only screen and (max-width: $break-small) { @content; }
+  }
+  @else if $media == medium-screens {
+    @media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) { @content; }
+  }
+  @else if $media == wide-screens {
+    @media only screen and (min-width: $break-large) { @content; }
+  }
+}
+
+%shadow {
+    box-shadow: 0px 2px 5px 0px color(black, opacity20);
+}
